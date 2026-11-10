@@ -146,6 +146,18 @@ a:hover {
   animation: riseIn 0.9s ease 0.12s both;
 }
 
+.hero .hero-note {
+  max-width: 34rem;
+  margin: 1.1rem 0 0;
+  font-size: 0.95rem;
+  color: rgba(244, 248, 247, 0.72);
+  animation: riseIn 0.9s ease 0.3s both;
+}
+
+.hero .hero-note a {
+  color: #f7ebe3;
+}
+
 .cta-row {
   display: flex;
   flex-wrap: wrap;
