@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gewoonian.github.io/zzpdesk/sitemap.xml

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wachtlijst — ZZPDesk</title>
+  <meta name="description" content="Schrijf je in voor de gratis ZZP weekstart-checklist van ZZPDesk. Nog geen betaalde e-mailtool vereist." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,650&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">ZZPDesk</a>
+    <nav class="nav" aria-label="Hoofd">
+      <a href="gidsen/index.html">Gidsen</a>
+      <a href="checklist.html">Checklist</a>
+      <a href="wachtlijst.html" aria-current="page">Wachtlijst</a>
+      <a href="over.html">Over</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main class="prose">
+    <h1>Gratis ZZP weekstart-checklist</h1>
+    <p class="lede">Laat je e-mail achter. Zodra de nieuwsbrief live is, sturen we de checklist en af en toe een korte tool-update. Geen spam, geen verdiensten-beloftes.</p>
+
+    <form class="waitlist-form" id="waitlist-form" novalidate>
+      <label>
+        E-mail
+        <input type="email" name="email" id="email" required autocomplete="email" placeholder="jij@voorbeeld.nl" />
+      </label>
+      <label>
+        Voornaam <span class="hint">(optioneel)</span>
+        <input type="text" name="name" id="name" autocomplete="given-name" placeholder="Alex" />
+      </label>
+      <div class="actions">
+        <button type="submit" class="btn btn-solid">Op de wachtlijst</button>
+        <a class="btn btn-outline" href="checklist.html">Bekijk checklist nu</a>
+      </div>
+    </form>
+
+    <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+
+    <h2>Hoe dit werkt (transparant)</h2>
+    <p>Dit is een <strong>stub zonder betaalde e-mailprovider</strong>. Je gegevens blijven in deze browser (localStorage) tot Ian een free-tier lijst koppelt (Loops/Buttondown). Daarna vervangen we dit formulier door een echte signup.</p>
+    <p>Privacy: zie <a href="privacy.html">privacy</a>.</p>
+  </main>
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <a href="index.html">← Home</a>
+      <a href="checklist.html">Checklist</a>
+    </div>
+  </footer>
+  <script>
+    (function () {
+      var form = document.getElementById("waitlist-form");
+      var status = document.getElementById("form-status");
+      var key = "zzpdesk_waitlist_v1";
+
+      function show(msg) {
+        status.textContent = msg;
+        status.classList.add("is-visible");
+      }
+
+      try {
+        var existing = JSON.parse(localStorage.getItem(key) || "null");
+        if (existing && existing.email) {
+          show("Je staat al op de lokale wachtlijst als " + existing.email + ". Checklist: open de checklist-pagina.");
+        }
+      } catch (e) {}
+
+      form.addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        var email = (document.getElementById("email").value || "").trim().toLowerCase();
+        var name = (document.getElementById("name").value || "").trim();
+        if (!email || email.indexOf("@") < 1) {
+          show("Vul een geldig e-mailadres in.");
+          return;
+        }
+        var payload = {
+          email: email,
+          name: name,
+          savedAt: new Date().toISOString(),
+          source: "wachtlijst"
+        };
+        localStorage.setItem(key, JSON.stringify(payload));
+        form.reset();
+        show("Opgeslagen in deze browser. Open nu de checklist — e-mailverzending volgt wanneer de free-tier lijst live is.");
+      });
+    })();
+  </script>
+</body>
+</html>
