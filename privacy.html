@@ -23,7 +23,8 @@
   </header>
   <main class="prose">
     <h1>Privacy</h1>
-    <p>ZZPDesk minimaliseert tracking. We kunnen privacyvriendelijke analytics gebruiken (bijv. Cloudflare Web Analytics) zonder cookies voor advertentieprofilering.</p>
+    <p>ZZPDesk minimaliseert tracking. Analytics staat standaard uit (<code>provider: "none"</code> in <code>js/site-config.js</code>). Optioneel: privacyvriendelijke Plausible of Cloudflare Web Analytics (geen advertentieprofilering), of GA4 alleen als Ian een meet-ID plakt (<code>MEASUREMENT_ID_PENDING</code> tot die tijd).</p>
+    <p>Er worden geen analytics-scripts geladen zolang de IDs op <code>*_PENDING</code> staan.</p>
     <h2>Wachtlijst / e-mail</h2>
     <p>Op dit moment is de wachtlijst een lokale stub: je e-mail wordt in deze browser opgeslagen (localStorage) tot er een gratis e-mailprovider is gekoppeld. Er gaat nog geen e-mail naar een server van ZZPDesk.</p>
     <p>Zodra een e-maillijst live gaat (Loops, Buttondown of vergelijkbaar free tier), vermelden we hier de provider en hoe je je uitschrijft.</p>
@@ -36,5 +37,7 @@
       <a href="disclosure.html">Disclosure</a>
     </div>
   </footer>
+  <script src="js/site-config.js" defer></script>
+  <script src="js/site-bootstrap.js" defer></script>
 </body>
 </html>

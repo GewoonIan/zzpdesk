@@ -14,6 +14,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,650&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
+  <!-- GSC_VERIFICATION_PENDING: plak meta-content in js/site-config.js → GSC_VERIFICATION, of drop google*.html in repo root (zie GSC_VERIFICATION_PENDING.html). -->
+  <!-- ANALYTICS: zet provider + ID in js/site-config.js (Plausible / Cloudflare / GA4 MEASUREMENT_ID_PENDING). -->
 </head>
 <body>
   <header class="site-header">
@@ -32,10 +34,10 @@
       <h1 class="brand-mark">ZZPDesk</h1>
       <p>Vergelijk en kies de tools die ZZP’ers écht nodig hebben — uren, facturen, projecten, notities en werkplek.</p>
       <div class="cta-row">
-        <a class="btn btn-primary" href="gidsen/tools-voor-zzp-2026.html">Start bij de tool-hub</a>
-        <a class="btn btn-ghost" href="checklist.html">Bekijk de weekstart-checklist</a>
+        <a class="btn btn-primary" href="checklist.html">Pak de gratis weekstart-checklist</a>
+        <a class="btn btn-ghost" href="gidsen/tools-voor-zzp-2026.html">Start bij de tool-hub</a>
       </div>
-      <p class="hero-note">Koopintentie-gidsen (beste X, vs-vergelijkingen, NL-templates). Checklist-mail: <a href="wachtlijst.html">wachtlijst</a> (stub tot free-tier e-mailprovider).</p>
+      <p class="hero-note">Koopintentie-gidsen (beste X, vs-vergelijkingen, NL-templates). Checklist in je inbox? <a href="wachtlijst.html">Wachtlijst</a> (stub tot free-tier e-mailprovider).</p>
     </div>
   </section>
 
@@ -305,5 +307,7 @@
     </div>
   </footer>
   <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+  <script src="js/site-config.js" defer></script>
+  <script src="js/site-bootstrap.js" defer></script>
 </body>
 </html>
