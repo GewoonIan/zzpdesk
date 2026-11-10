@@ -84,6 +84,86 @@
     }
   }
 
+  function campaignSlug(el) {
+    var c = el.getAttribute("data-campaign");
+    if (c && c.trim()) return c.trim();
+    try {
+      var path = location.pathname || "";
+      var base = path.split("/").pop() || "zzpdesk";
+      return base.replace(/\.html$/i, "") || "zzpdesk";
+    } catch (e) {
+      return "zzpdesk";
+    }
+  }
+
+  function withUtm(url, campaign) {
+    var utm = cfg.UTM || {};
+    try {
+      var u = new URL(url, cfg.SITE_BASE || location.origin);
+      if (utm.source) u.searchParams.set("utm_source", utm.source);
+      if (utm.medium) u.searchParams.set("utm_medium", utm.medium);
+      if (campaign) u.searchParams.set("utm_campaign", campaign);
+      return u.toString();
+    } catch (e) {
+      return url;
+    }
+  }
+
+  /**
+   * Consistent affiliate hooks for a[data-affiliate].
+   * Networks: amazon | bol | awin | tradetracker | vendor
+   * - Always adds UTM from site-config (safe without IDs).
+   * - Amazon: sets tag= when AMAZON_NL_TRACKING_ID is real.
+   * - Bol/Awin/TT: marks sponsored when IDs real; deep-link rewrite needs Ian offer URLs later.
+   * Never invents IDs.
+   */
+  function applyAffiliateLinks() {
+    var aff = cfg.AFFILIATE || {};
+    var amazonReady = !isPending(aff.AMAZON_NL_TRACKING_ID);
+    var bolReady = !isPending(aff.BOL_SITE_ID) || !isPending(aff.BOL_PARTNER_ID);
+    var awinReady = !isPending(aff.AWIN_PUBLISHER_ID);
+    var ttReady = !isPending(aff.TRADETRACKER_SITE_ID) || !isPending(aff.TRADETRACKER_CAMPAIGN_ID);
+    var links = document.querySelectorAll("a[data-affiliate]");
+    for (var i = 0; i < links.length; i++) {
+      var a = links[i];
+      var network = (a.getAttribute("data-affiliate") || "").toLowerCase().trim();
+      var href = a.getAttribute("href");
+      if (!href || href.charAt(0) === "#") continue;
+      var campaign = campaignSlug(a);
+      var active = false;
+
+      if (network === "amazon" && amazonReady) {
+        try {
+          var au = new URL(href, cfg.SITE_BASE || location.origin);
+          au.searchParams.set("tag", aff.AMAZON_NL_TRACKING_ID.trim());
+          href = au.toString();
+          active = true;
+        } catch (e) { /* keep href */ }
+      } else if (network === "bol" && bolReady) {
+        active = true;
+        if (!isPending(aff.BOL_SITE_ID)) a.setAttribute("data-bol-site", aff.BOL_SITE_ID.trim());
+        if (!isPending(aff.BOL_PARTNER_ID)) a.setAttribute("data-bol-partner", aff.BOL_PARTNER_ID.trim());
+      } else if (network === "awin" && awinReady) {
+        active = true;
+        a.setAttribute("data-awin-publisher", aff.AWIN_PUBLISHER_ID.trim());
+      } else if (network === "tradetracker" && ttReady) {
+        active = true;
+        if (!isPending(aff.TRADETRACKER_CAMPAIGN_ID)) {
+          a.setAttribute("data-tt-campaign", aff.TRADETRACKER_CAMPAIGN_ID.trim());
+        }
+        if (!isPending(aff.TRADETRACKER_SITE_ID)) {
+          a.setAttribute("data-tt-site", aff.TRADETRACKER_SITE_ID.trim());
+        }
+      } else if (network === "vendor") {
+        active = awinReady || ttReady;
+      }
+
+      a.setAttribute("href", withUtm(href, campaign));
+      a.setAttribute("rel", active ? "sponsored noopener noreferrer" : "noopener noreferrer");
+      if (active) a.setAttribute("data-affiliate-active", "1");
+    }
+  }
+
   function refreshEmailPlaceholders() {
     if (isPending(cfg.IAN_EMAIL, "IAN_EMAIL_PENDING")) return;
     var email = cfg.IAN_EMAIL.trim();
@@ -102,10 +182,12 @@
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       refreshAffiliatePlaceholders();
+      applyAffiliateLinks();
       refreshEmailPlaceholders();
     });
   } else {
     refreshAffiliatePlaceholders();
+    applyAffiliateLinks();
     refreshEmailPlaceholders();
   }
 })();

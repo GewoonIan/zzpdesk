@@ -26,7 +26,11 @@ window.ZZPDESK_CONFIG = {
     MEASUREMENT_ID: "MEASUREMENT_ID_PENDING"
   },
 
-  /** Affiliate — plak tracking/site-IDs; geen wachtwoorden. */
+  /**
+   * Affiliate — plak tracking/site-IDs; geen wachtwoorden.
+   * Pagina’s gebruiken a[data-affiliate="amazon|bol|awin|tradetracker|vendor"].
+   * Bootstrap zet Amazon tag=, UTM, en sponsored-rel zodra IDs ≠ *_PENDING.
+   */
   AFFILIATE: {
     AMAZON_NL_TRACKING_ID: "AFFILIATE_ID_PENDING",
     BOL_SITE_ID: "AFFILIATE_ID_PENDING",
